@@ -24,10 +24,27 @@ jobs:
         run: nuget restore
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
+      # SonarQube - Prepare Analysis
+      - name: Prepare SonarQube Analysis
+        run: |
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-msbuild/sonar-scanner-msbuild-5.12.1.58839-net46.zip -O sonar-scanner.zip
+          mkdir sonar-scanner
+          tar -xf sonar-scanner.zip -C sonar-scanner --strip-components=1
+          ./sonar-scanner/SonarScanner.MSBuild.exe begin /k:"your-project-key" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        working-directory: ${{ inputs.working-directory }}
+
+
       # Build the project
       - name: Build the project
         run: msbuild /p:Configuration=Release
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+
+      # SonarQube - End Analysis
+      - name: Complete SonarQube Analysis
+        run: |
+          ./sonar-scanner/SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        working-directory: ${{ inputs.working-directory }}
+
 
       # Cache ?
   
@@ -52,3 +69,4 @@ jobs:
         run: |
           vstest.console.exe **\bin\Debug\*Test*.dll --logger:trx
         working-directory: ${{ inputs.working-directory }}
+
