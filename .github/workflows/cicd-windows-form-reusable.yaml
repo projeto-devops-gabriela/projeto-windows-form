@@ -51,12 +51,12 @@ jobs:
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
 
-      # - name: Run SonarCloud analysis
-      #   run: |
-      #     dotnet tool install --global dotnet-sonarscanner
-      #     dotnet-sonarscanner begin /k:"<your-project-key>" /o:"<your-organization-key>" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-      #     msbuild.exe ${{ inputs.working-directory }}/WindowsFormsApp-ok/WindowsFormsApp-ok.sln /t:Rebuild
-      #     dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      - name: Run SonarCloud analysis
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet-sonarscanner begin /k:"<your-project-key>" /o:"<your-organization-key>" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          msbuild.exe ${{ inputs.working-directory }}/WindowsFormsApp-ok/WindowsFormsApp-ok.sln /t:Rebuild
+          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
   
   tests:
     runs-on: windows-latest
