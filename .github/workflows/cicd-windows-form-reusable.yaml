@@ -24,29 +24,39 @@ jobs:
         run: nuget restore
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      # SonarQube - Prepare Analysis
-      - name: Prepare SonarQube Analysis
-        run: |
-          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-msbuild/sonar-scanner-msbuild-5.12.1.58839-net46.zip -O sonar-scanner.zip
-          mkdir sonar-scanner
-          tar -xf sonar-scanner.zip -C sonar-scanner --strip-components=1
-          ./sonar-scanner/SonarScanner.MSBuild.exe begin /k:"your-project-key" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-        working-directory: ${{ inputs.working-directory }}
-
-
       # Build the project
       - name: Build the project
         run: msbuild /p:Configuration=Release
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      # SonarQube - End Analysis
-      - name: Complete SonarQube Analysis
-        run: |
-          ./sonar-scanner/SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-        working-directory: ${{ inputs.working-directory }}
-
-
       # Cache ?
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache SonarCloud scanner
+        uses: actions/cache@v4
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+
+      # - name: Run SonarCloud analysis
+      #   run: |
+      #     dotnet tool install --global dotnet-sonarscanner
+      #     dotnet-sonarscanner begin /k:"<your-project-key>" /o:"<your-organization-key>" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+      #     msbuild.exe ${{ inputs.working-directory }}/WindowsFormsApp-ok/WindowsFormsApp-ok.sln /t:Rebuild
+      #     dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
   
   tests:
     runs-on: windows-latest
