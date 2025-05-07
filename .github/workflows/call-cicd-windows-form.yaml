@@ -1,0 +1,14 @@
+name: call-cicd-windows-form
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  call-build:
+    uses: ./.github/workflows/cicd-windows-form-reusable.yaml
+    with:
+      working-directory: 'src'

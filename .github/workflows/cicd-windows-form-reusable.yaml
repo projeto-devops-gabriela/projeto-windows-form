@@ -1,0 +1,54 @@
+name: Build Windows Forms App
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup MSBuild
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      # Restore NuGet packages
+      - name: Restore NuGet packages
+        run: nuget restore
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+
+      # Build the project
+      - name: Build the project
+        run: msbuild /p:Configuration=Release
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+
+      # Cache ?
+  
+  tests:
+    runs-on: windows-latest
+    needs: build
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Setup MSBuild
+      - name: Setup MSBuild path
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      # Setup VSTest
+      - name: Setup VSTest
+        uses: darenm/Setup-VSTest@v1
+
+      # Run tests
+      - name: Run tests
+        run: |
+          vstest.console.exe **\bin\Debug\*Test*.dll --logger:trx
+        working-directory: ${{ inputs.working-directory }}
