@@ -24,13 +24,28 @@ jobs:
         run: |
           Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/10.1.2.114627/sonar-scanner-10.1.2.114627-net-framework.zip -OutFile scanner.zip
           Expand-Archive scanner.zip -DestinationPath $env:USERPROFILE\sonarscanner
+          # List files to confirm correct extraction
+          dir $env:USERPROFILE\sonarscanner
+        shell: powershell
+
+      # Add SonarScanner to PATH
+      - name: Add SonarScanner to PATH
+        run: |
           echo "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin" >> $env:GITHUB_PATH
+          # List the PATH to confirm it's set
+          echo $env:GITHUB_PATH
+        shell: powershell
+
+      # Confirm SonarScanner path
+      - name: Confirm SonarScanner installation
+        run: |
+          dir "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin"
         shell: powershell
 
       # Begin SonarCloud analysis
       - name: Begin SonarCloud analysis
         run: |
-          SonarScanner.MSBuild.exe begin `
+          "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin\SonarScanner.MSBuild.exe" begin `
             /k:"Gabriela-M-Silva_Projeto-Windows-Form" `
             /o:"gabriela-m-silva" `
             /d:sonar.host.url="https://sonarcloud.io" `
@@ -50,7 +65,8 @@ jobs:
 
       # End SonarCloud analysis
       - name: End SonarCloud analysis
-        run: SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        run: |
+          "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin\SonarScanner.MSBuild.exe" end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
         shell: powershell
 
