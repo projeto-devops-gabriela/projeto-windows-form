@@ -37,8 +37,6 @@ jobs:
           args: >
             -Dsonar.organization=gabriela-m-silva
             -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.login=${SONAR_TOKEN}
             -Dsonar.verbose=true
             -Dsonar.exclusions=**/bin/**,**/obj/**,**/packages/**
 
