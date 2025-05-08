@@ -22,7 +22,7 @@ jobs:
       # Download SonarScanner for MSBuild
       - name: Download SonarScanner for MSBuild
         run: |
-          Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/latest/download/sonar-scanner-msbuild-net46.zip -OutFile scanner.zip
+          Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/10.1.2.114627/sonar-scanner-10.1.2.114627-net-framework.zip -OutFile scanner.zip
           Expand-Archive scanner.zip -DestinationPath $env:USERPROFILE\sonarscanner
           echo "$env:USERPROFILE\sonarscanner\sonar-scanner-msbuild-net46" | Out-File -Append -FilePath $env:GITHUB_PATH
         shell: powershell
