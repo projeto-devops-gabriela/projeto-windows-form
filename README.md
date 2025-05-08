@@ -1,4 +1,6 @@
-# Build - ok
+# CI
+
+## Build - ok
 
 - A conferir:
 
@@ -11,12 +13,17 @@ Quais as versões mais atualizadas?
 
 Cache?
 
-# Tests - ok
+## Tests - ok
 
 - Dúvida:
 
 A solução de app e a de teste devem estar dentro da mesma pasta <br>
 e serem refernciadas por src, por exemplo?
 
-# SonarQube - ok
+## SonarQube - ok
 
+## Salvar os binários para CD
+
+# CD
+
+## Copiar os binários do CI para um file server
