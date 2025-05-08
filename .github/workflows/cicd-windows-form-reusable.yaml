@@ -1,4 +1,4 @@
-name: CI-CD Windows Forms App
+name: CI-CD Windows Forms App Reusable Workflow
 
 on:
   workflow_call:
@@ -29,11 +29,16 @@ jobs:
         run: nuget restore
         working-directory: ${{ inputs.app-directory }}
 
-      # Build the project
-      - name: Build the project
+      # Build the application project
+      - name: Build application project
         run: msbuild /p:Configuration=Release
         working-directory: ${{ inputs.app-directory }}
   
+      # Build test project(s)
+      - name: Build test project
+        run: msbuild /p:Configuration=Release
+        working-directory: ${{ inputs.test-directory }}
+
       # Setup VSTest
       - name: Setup VSTest
         uses: darenm/Setup-VSTest@v1
@@ -56,4 +61,10 @@ jobs:
             -Dsonar.verbose=true
             -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*
 
+      # Upload build artifacts for CD
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: ${{ inputs.app-directory }}/bin/Release/
       
