@@ -6,6 +6,8 @@ on:
       working-directory:
         required: true
         type: string
+    secrets:
+      SONAR_TOKEN:
 
 jobs:
   build:
