@@ -31,10 +31,8 @@ jobs:
 
       # Cache ?
 
-      - name: Install SonarScanner for MSBuild
-        run: |
-          choco install sonarscanner-msbuild -y
-          refreshenv
+      - name: Setup SonarScanner for MSBuild
+        uses: SonarSource/setup-sonar-scanner-msbuild@v1
 
       - name: Begin SonarCloud analysis
         env:
