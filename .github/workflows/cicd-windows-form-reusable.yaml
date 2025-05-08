@@ -29,29 +29,18 @@ jobs:
         run: msbuild /p:Configuration=Release
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      # Cache ?
-
-      - name: Baixar SonarScanner for MSBuild
-        run: |
-          Invoke-WebRequest -Uri "https://binaries.sonarsource.com/Distribution/sonar-scanner-msbuild/sonar-scanner-msbuild-5.12.1.58839-net46.zip" -OutFile "scanner.zip"
-          Expand-Archive scanner.zip -DestinationPath "sonarscanner"
-
-      - name: Begin SonarCloud analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          ./sonarscanner/SonarScanner.MSBuild.exe begin /k:"Gabriela-M-S1lva_Projeto-Windows-Form" /o:"gabriela-m-silva" /d:sonar.login="${SONAR_TOKEN}" /d:sonar.host.url="https://sonarcloud.io"
-
-      - name: Build solution
-        run: |
-          msbuild.exe ${{ inputs.working-directory }}/WindowsFormsApp-ok/WindowsFormsApp-ok.sln /t:Rebuild
-
-      - name: End SonarCloud analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          ./sonarscanner/SonarScanner.MSBuild.exe end /d:sonar.login="${SONAR_TOKEN}"
-  
+      # Sonar
+      - name: SonarCloud analysis
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          args: >
+            -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form
+            -Dsonar.organization=gabriela-m-silva
+            -Dsonar.sources=.
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+          working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+ 
   tests:
     runs-on: windows-latest
     needs: build
