@@ -12,5 +12,3 @@ jobs:
     uses: ./.github/workflows/cicd-windows-form-reusable.yaml
     with:
       working-directory: 'src'
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

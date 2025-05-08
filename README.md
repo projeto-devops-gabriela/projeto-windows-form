@@ -17,8 +17,10 @@ Cache?
 
 - Dúvida:
 
-A solução de app e a de teste devem estar dentro da mesma pasta <br>
-e serem refernciadas por src, por exemplo?
+A solução de app e a de teste devem estar dentro da mesma pasta e serem referenciadas por src, por exemplo? <br>
+
+Na esteira, melhor transformar em uma etapa da build? <br>
+"build and test"
 
 ## SonarQube - ok
 

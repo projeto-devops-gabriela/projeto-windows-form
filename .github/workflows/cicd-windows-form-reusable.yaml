@@ -6,8 +6,6 @@ on:
       working-directory:
         required: true
         type: string
-    secrets:
-      SONAR_TOKEN: {}
 
 jobs:
   build:
@@ -24,12 +22,12 @@ jobs:
       # Restore NuGet packages
       - name: Restore NuGet packages
         run: nuget restore
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok # n pode isso aqui
 
       # Build the project
       - name: Build the project
         run: msbuild /p:Configuration=Release
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok # n pode isso aqui, pq aí não é reusable
   
       # Sonar
       - name: Sonarqube Scanner
@@ -39,29 +37,19 @@ jobs:
         with:
           args: >
             -Dsonar.organization=gabriela-m-silva
-            -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form
+            -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form #isso vai virar uma var
             -Dsonar.verbose=true
             -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*
-
-  tests:
-    runs-on: windows-latest
-    needs: build
-    steps:
-      # Checkout the code
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Setup MSBuild
-      - name: Setup MSBuild path
-        uses: microsoft/setup-msbuild@v1.3.1
 
       # Setup VSTest
       - name: Setup VSTest
         uses: darenm/Setup-VSTest@v1
 
-      # Run tests
+      # Run tests --------unificar com build
       - name: Run tests
         run: |
           vstest.console.exe **/*Test*.dll --logger:trx
         working-directory: ${{ inputs.working-directory }}
 
+    # publish:
+      
