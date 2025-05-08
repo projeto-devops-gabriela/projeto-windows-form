@@ -22,12 +22,12 @@ jobs:
       # Download SonarScanner for MSBuild
       - name: Download SonarScanner for MSBuild
         run: |
-          Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/10.1.2.114627/sonar-scanner-10.1.2.114627-net-framework.zip -OutFile scanner.zip
+          Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.13.0.66728/sonar-scanner-msbuild-5.13.0.66728-net46.zip -OutFile scanner.zip
           Expand-Archive scanner.zip -DestinationPath $env:USERPROFILE\sonarscanner
-          echo "$env:USERPROFILE\sonarscanner\sonar-scanner-msbuild-10.1.2.114627-net46" >> $env:GITHUB_PATH
+          echo "$env:USERPROFILE\sonarscanner\sonar-scanner-msbuild-5.13.0.66728-net46" | Out-File -Append -FilePath $env:GITHUB_PATH
         shell: powershell
 
-      # Begin Sonar Analysis
+      # Begin SonarCloud analysis
       - name: Begin SonarCloud analysis
         run: |
           SonarScanner.MSBuild.exe begin `
@@ -38,17 +38,17 @@ jobs:
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
         shell: powershell
 
-      # Restore NuGet
+      # Restore NuGet packages
       - name: Restore NuGet packages
         run: nuget restore
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      # Build
+      # Build the project
       - name: Build the project
         run: msbuild /p:Configuration=Release
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      # End Sonar Analysis
+      # End SonarCloud analysis
       - name: End SonarCloud analysis
         run: SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
@@ -71,4 +71,3 @@ jobs:
         run: |
           vstest.console.exe **\bin\Debug\*Test*.dll --logger:trx
         working-directory: ${{ inputs.working-directory }}
-
