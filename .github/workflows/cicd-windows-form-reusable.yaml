@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      # Checkout
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -22,9 +22,9 @@ jobs:
       # Download SonarScanner for MSBuild
       - name: Download SonarScanner for MSBuild
         run: |
-          Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.13.0.66728/sonar-scanner-msbuild-5.13.0.66728-net46.zip -OutFile scanner.zip
+          Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/10.1.2.114627/sonar-scanner-10.1.2.114627-net-framework.zip -OutFile scanner.zip
           Expand-Archive scanner.zip -DestinationPath $env:USERPROFILE\sonarscanner
-          echo "$env:USERPROFILE\sonarscanner\sonar-scanner-msbuild-5.13.0.66728-net46" | Out-File -Append -FilePath $env:GITHUB_PATH
+          echo "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework" | Out-File -Append -FilePath $env:GITHUB_PATH
         shell: powershell
 
       # Begin SonarCloud analysis
@@ -58,15 +58,19 @@ jobs:
     runs-on: windows-latest
     needs: build
     steps:
+      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Setup MSBuild
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v1.3.1
 
+      # Setup VSTest
       - name: Setup VSTest
         uses: darenm/Setup-VSTest@v1
 
+      # Run tests
       - name: Run tests
         run: |
           vstest.console.exe **\bin\Debug\*Test*.dll --logger:trx
