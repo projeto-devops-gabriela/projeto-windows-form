@@ -6,11 +6,14 @@ on:
       working-directory:
         required: true
         type: string
+      app-directory:
+        required: true
+        type: string
     secrets:
       SONAR_TOKEN:
 
 jobs:
-  build:
+  build-and-test:
     runs-on: windows-latest
     steps:
       # Checkout the code
@@ -24,12 +27,12 @@ jobs:
       # Restore NuGet packages
       - name: Restore NuGet packages
         run: nuget restore
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+        working-directory: ${{ inputs.app-directory }}
 
       # Build the project
       - name: Build the project
         run: msbuild /p:Configuration=Release
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+        working-directory: ${{ inputs.app-directory }}
   
       # Setup VSTest
       - name: Setup VSTest
@@ -39,7 +42,7 @@ jobs:
       - name: Run tests
         run: |
           vstest.console.exe **/*Test*.dll --logger:trx
-        working-directory: ${{ inputs.working-directory }}
+        working-directory: ${{ inputs.test-directory }}
 
       # Sonar
       - name: Sonarqube Scanner

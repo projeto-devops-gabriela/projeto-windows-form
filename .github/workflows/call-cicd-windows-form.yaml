@@ -8,9 +8,10 @@ on:
     branches: [main]
 
 jobs:
-  call-build:
+  call-windows-form:
     uses: ./.github/workflows/cicd-windows-form-reusable.yaml
     with:
-      working-directory: 'src'
+      test-directory: 'src/UnitTestProject1'
+      app-directory: 'src/WindowsFormsApp-ok'
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
