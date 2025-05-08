@@ -3,7 +3,7 @@ name: CI-CD Windows Forms App
 on:
   workflow_call:
     inputs:
-      working-directory:
+      test-directory:
         required: true
         type: string
       app-directory:
