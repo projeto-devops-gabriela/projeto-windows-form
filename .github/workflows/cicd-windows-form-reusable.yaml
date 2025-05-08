@@ -24,7 +24,7 @@ jobs:
         run: |
           Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/10.1.2.114627/sonar-scanner-10.1.2.114627-net-framework.zip -OutFile scanner.zip
           Expand-Archive scanner.zip -DestinationPath $env:USERPROFILE\sonarscanner
-          echo "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework" | Out-File -Append -FilePath $env:GITHUB_PATH
+          echo "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin" >> $env:GITHUB_PATH
         shell: powershell
 
       # Begin SonarCloud analysis
