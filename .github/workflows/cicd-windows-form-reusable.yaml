@@ -31,34 +31,26 @@ jobs:
 
       # Cache ?
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+      - name: Install SonarScanner for MSBuild
+        run: |
+          choco install sonarscanner-msbuild -y
+          refreshenv
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v4
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache SonarCloud scanner
-        uses: actions/cache@v4
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-
-      - name: Run SonarCloud analysis
+      - name: Begin SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet tool install --global dotnet-sonarscanner
-          dotnet-sonarscanner begin /k:"Gabriela-M-Silva_Projeto-Windows-Form" /o:"gabriela-m-silva" /d:sonar.token="${SONAR_TOKEN}" /d:sonar.host.url="https://sonarcloud.io"
+          SonarScanner.MSBuild.exe begin /k:"Gabriela-M-S1lva_Projeto-Windows-Form" /o:"gabriela-m-silva" /d:sonar.login="${SONAR_TOKEN}" /d:sonar.host.url="https://sonarcloud.io"
+
+      - name: Build solution
+        run: |
           msbuild.exe ${{ inputs.working-directory }}/WindowsFormsApp-ok/WindowsFormsApp-ok.sln /t:Rebuild
-          dotnet-sonarscanner end /d:sonar.token="${SONAR_TOKEN}"
+
+      - name: End SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          SonarScanner.MSBuild.exe end /d:sonar.login="${SONAR_TOKEN}"
   
   tests:
     runs-on: windows-latest
