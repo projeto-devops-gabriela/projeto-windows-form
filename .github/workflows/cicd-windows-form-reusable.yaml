@@ -25,11 +25,14 @@ jobs:
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
       # Build the project
-      - name: Build the project
-        run: msbuild /p:Configuration=Release
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+      # - name: Build the project
+      #   run: msbuild /p:Configuration=Release
+      #   working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
       # Cache ?
+      - name: Search for SonarScanner packages in Chocolatey
+        run: choco search sonarscanner
+        shell: powershell
 
       - name: Install SonarScanner for MSBuild
         run: |
@@ -77,4 +80,3 @@ jobs:
         run: |
           vstest.console.exe **\bin\Debug\*Test*.dll --logger:trx
         working-directory: ${{ inputs.working-directory }}
-
