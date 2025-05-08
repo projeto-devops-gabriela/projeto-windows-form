@@ -6,6 +6,8 @@ on:
       working-directory:
         required: true
         type: string
+    secrets:
+      SONAR_TOKEN:
 
 jobs:
   build:
@@ -20,14 +22,14 @@ jobs:
         uses: microsoft/setup-msbuild@v1.3.1
 
       # Restore NuGet packages
-      # - name: Restore NuGet packages
-      #   run: nuget restore
-      #   working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+      - name: Restore NuGet packages
+        run: nuget restore
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
       # Build the project
-      # - name: Build the project
-      #   run: msbuild /p:Configuration=Release
-      #   working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+      - name: Build the project
+        run: msbuild /p:Configuration=Release
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
       - name: debug sonar_token
         env:
