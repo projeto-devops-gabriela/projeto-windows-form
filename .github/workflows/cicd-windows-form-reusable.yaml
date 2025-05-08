@@ -29,19 +29,15 @@ jobs:
         run: msbuild /p:Configuration=Release
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      - name: Sonarqube Scanner
-        uses: SonarSource/sonarqube-scan-action@v5
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: ${{ inputs.working-directory }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: >
-            -Dsonar.organization=gabriela-m-silva
-            -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form
-            -Dsonar.verbose=true
-            -Dsonar.exclusions=**/bin/**,**/obj/**,**/packages/**
-
-      # Cache ?
-  
+          SONAR_PROJECT_KEY: Gabriela-M-Silva_Projeto-Windows-Form
+          SONAR_ORGANIZATION: gabriela-m-silva
+ 
   tests:
     runs-on: windows-latest
     needs: build
