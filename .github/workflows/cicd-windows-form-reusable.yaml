@@ -35,22 +35,26 @@ jobs:
         run: |
           choco install sonarscanner-msbuild -y
           refreshenv
+        shell: powershell
 
       - name: Begin SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           SonarScanner.MSBuild.exe begin /k:"Gabriela-M-S1lva_Projeto-Windows-Form" /o:"gabriela-m-silva" /d:sonar.login="${SONAR_TOKEN}" /d:sonar.host.url="https://sonarcloud.io"
+        shell: powershell
 
       - name: Build solution
         run: |
           msbuild.exe ${{ inputs.working-directory }}/WindowsFormsApp-ok/WindowsFormsApp-ok.sln /t:Rebuild
+        shell: powershell
 
       - name: End SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           SonarScanner.MSBuild.exe end /d:sonar.login="${SONAR_TOKEN}"
+        shell: powershell
   
   tests:
     runs-on: windows-latest
