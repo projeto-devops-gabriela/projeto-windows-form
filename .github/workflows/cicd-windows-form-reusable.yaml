@@ -36,7 +36,7 @@ jobs:
 
       - name: Install SonarScanner for MSBuild
         run: |
-          choco install sonarscanner-net-framework 10.1.2 -y
+          choco install sonarscanner-net-framework -y
           refreshenv
         shell: powershell
 
