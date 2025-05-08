@@ -20,7 +20,7 @@ e serem refernciadas por src, por exemplo?
 
 - A conferir:
 
-Mudar a chamada de teste para algo mais geral
+Mudar a chamada de teste para algo mais geral (*Test*.dll)
 
 # SonarQube
 

@@ -31,14 +31,16 @@ jobs:
 
       # Cache ?
 
-      - name: Setup SonarScanner for MSBuild
-        uses: SonarSource/setup-sonar-scanner-msbuild@v1
+      - name: Baixar SonarScanner for MSBuild
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.15.0.61497/sonar-scanner-msbuild-5.15.0.61497-net46.zip" -OutFile "scanner.zip"
+          Expand-Archive scanner.zip -DestinationPath "sonarscanner"
 
       - name: Begin SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          SonarScanner.MSBuild.exe begin /k:"Gabriela-M-S1lva_Projeto-Windows-Form" /o:"gabriela-m-silva" /d:sonar.login="${SONAR_TOKEN}" /d:sonar.host.url="https://sonarcloud.io"
+          ./sonarscanner/SonarScanner.MSBuild.exe begin /k:"Gabriela-M-S1lva_Projeto-Windows-Form" /o:"gabriela-m-silva" /d:sonar.login="${SONAR_TOKEN}" /d:sonar.host.url="https://sonarcloud.io"
 
       - name: Build solution
         run: |
@@ -48,7 +50,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          SonarScanner.MSBuild.exe end /d:sonar.login="${SONAR_TOKEN}"
+          ./sonarscanner/SonarScanner.MSBuild.exe end /d:sonar.login="${SONAR_TOKEN}"
   
   tests:
     runs-on: windows-latest
