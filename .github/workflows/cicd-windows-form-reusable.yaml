@@ -19,40 +19,6 @@ jobs:
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v1.3.1
 
-      # Download SonarScanner for MSBuild
-      - name: Download SonarScanner for MSBuild
-        run: |
-          Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/10.1.2.114627/sonar-scanner-10.1.2.114627-net-framework.zip -OutFile scanner.zip
-          Expand-Archive scanner.zip -DestinationPath $env:USERPROFILE\sonarscanner
-          # List files to confirm correct extraction
-          dir $env:USERPROFILE\sonarscanner
-        shell: powershell
-
-      # Add SonarScanner to PATH
-      - name: Add SonarScanner to PATH
-        run: |
-          echo "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin" >> $env:GITHUB_PATH
-          # List the PATH to confirm it's set
-          echo $env:GITHUB_PATH
-        shell: powershell
-
-      # Confirm SonarScanner path
-      - name: Confirm SonarScanner installation
-        run: |
-          dir "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin"
-        shell: powershell
-
-      # Begin SonarCloud analysis
-      - name: Begin SonarCloud analysis
-        run: |
-          "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin\SonarScanner.MSBuild.exe" begin `
-            /k:"Gabriela-M-Silva_Projeto-Windows-Form" `
-            /o:"gabriela-m-silva" `
-            /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
-        shell: powershell
-
       # Restore NuGet packages
       - name: Restore NuGet packages
         run: nuget restore
@@ -63,13 +29,29 @@ jobs:
         run: msbuild /p:Configuration=Release
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      # End SonarCloud analysis
-      - name: End SonarCloud analysis
-        run: |
-          "$env:USERPROFILE\sonarscanner\sonar-scanner-10.1.2.114627-net-framework\bin\SonarScanner.MSBuild.exe" end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
-        shell: powershell
+      # Cache ?
 
+      - name: Install SonarScanner for MSBuild
+        run: |
+          choco install sonarscanner-msbuild -y
+          refreshenv
+
+      - name: Begin SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          SonarScanner.MSBuild.exe begin /k:"Gabriela-M-S1lva_Projeto-Windows-Form" /o:"gabriela-m-silva" /d:sonar.login="${SONAR_TOKEN}" /d:sonar.host.url="https://sonarcloud.io"
+
+      - name: Build solution
+        run: |
+          msbuild.exe ${{ inputs.working-directory }}/WindowsFormsApp-ok/WindowsFormsApp-ok.sln /t:Rebuild
+
+      - name: End SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          SonarScanner.MSBuild.exe end /d:sonar.login="${SONAR_TOKEN}"
+  
   tests:
     runs-on: windows-latest
     needs: build
@@ -91,3 +73,4 @@ jobs:
         run: |
           vstest.console.exe **\bin\Debug\*Test*.dll --logger:trx
         working-directory: ${{ inputs.working-directory }}
+
