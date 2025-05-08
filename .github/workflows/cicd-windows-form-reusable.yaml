@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      # Checkout the code
+      # Checkout
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -19,45 +19,54 @@ jobs:
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v1.3.1
 
-      # Restore NuGet packages
+      # Download SonarScanner for MSBuild
+      - name: Download SonarScanner for MSBuild
+        run: |
+          Invoke-WebRequest https://github.com/SonarSource/sonar-scanner-msbuild/releases/latest/download/sonar-scanner-msbuild-net46.zip -OutFile scanner.zip
+          Expand-Archive scanner.zip -DestinationPath $env:USERPROFILE\sonarscanner
+          echo "$env:USERPROFILE\sonarscanner\sonar-scanner-msbuild-net46" | Out-File -Append -FilePath $env:GITHUB_PATH
+        shell: powershell
+
+      # Begin Sonar Analysis
+      - name: Begin SonarCloud analysis
+        run: |
+          SonarScanner.MSBuild.exe begin `
+            /k:"Gabriela-M-Silva_Projeto-Windows-Form" `
+            /o:"gabriela-m-silva" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+        shell: powershell
+
+      # Restore NuGet
       - name: Restore NuGet packages
         run: nuget restore
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      # Build the project
+      # Build
       - name: Build the project
         run: msbuild /p:Configuration=Release
         working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
-      # Sonar
-      - name: SonarCloud analysis
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-          args: >
-            -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form
-            -Dsonar.organization=gabriela-m-silva
-            -Dsonar.sources=.
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-          working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
- 
+      # End Sonar Analysis
+      - name: End SonarCloud analysis
+        run: SonarScanner.MSBuild.exe end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
+        shell: powershell
+
   tests:
     runs-on: windows-latest
     needs: build
     steps:
-      # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Setup MSBuild
       - name: Setup MSBuild path
         uses: microsoft/setup-msbuild@v1.3.1
 
-      # Setup VSTest
       - name: Setup VSTest
         uses: darenm/Setup-VSTest@v1
 
-      # Run tests
       - name: Run tests
         run: |
           vstest.console.exe **\bin\Debug\*Test*.dll --logger:trx
