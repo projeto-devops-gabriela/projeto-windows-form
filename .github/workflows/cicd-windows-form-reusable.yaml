@@ -37,7 +37,6 @@ jobs:
       - name: Install SonarScanner for MSBuild
         run: |
           choco install sonarscanner-net-framework -y
-          refreshenv
         shell: powershell
 
       - name: Begin SonarCloud analysis
