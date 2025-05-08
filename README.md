@@ -18,9 +18,5 @@ Cache?
 A solução de app e a de teste devem estar dentro da mesma pasta <br>
 e serem refernciadas por src, por exemplo?
 
-- A conferir:
-
-Mudar a chamada de teste para algo mais geral (*Test*.dll)
-
-# SonarQube
+# SonarQube - ok
 
