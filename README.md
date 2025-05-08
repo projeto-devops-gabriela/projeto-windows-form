@@ -15,12 +15,11 @@ Cache?
 
 ## Tests - ok
 
-- Dúvida:
+- Dúvidas:
 
 A solução de app e a de teste devem estar dentro da mesma pasta e serem referenciadas por src, por exemplo? <br>
 
-Na esteira, melhor transformar em uma etapa da build? <br>
-"build and test"
+Na esteira, melhor transformar em uma etapa da build? R: Sim.
 
 ## SonarQube - ok
 

@@ -1,4 +1,4 @@
-name: Build Windows Forms App
+name: CI-CD Windows Forms App
 
 on:
   workflow_call:
@@ -22,13 +22,23 @@ jobs:
       # Restore NuGet packages
       - name: Restore NuGet packages
         run: nuget restore
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok # n pode isso aqui
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
 
       # Build the project
       - name: Build the project
         run: msbuild /p:Configuration=Release
-        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok # n pode isso aqui, pq aí não é reusable
+        working-directory: ${{ inputs.working-directory }}/WindowsFormsApp-ok
   
+      # Setup VSTest
+      - name: Setup VSTest
+        uses: darenm/Setup-VSTest@v1
+
+      # Run tests
+      - name: Run tests
+        run: |
+          vstest.console.exe **/*Test*.dll --logger:trx
+        working-directory: ${{ inputs.working-directory }}
+
       # Sonar
       - name: Sonarqube Scanner
         uses: SonarSource/sonarqube-scan-action@v5
@@ -37,19 +47,8 @@ jobs:
         with:
           args: >
             -Dsonar.organization=gabriela-m-silva
-            -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form #isso vai virar uma var
+            -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form
             -Dsonar.verbose=true
             -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*
 
-      # Setup VSTest
-      - name: Setup VSTest
-        uses: darenm/Setup-VSTest@v1
-
-      # Run tests --------unificar com build
-      - name: Run tests
-        run: |
-          vstest.console.exe **/*Test*.dll --logger:trx
-        working-directory: ${{ inputs.working-directory }}
-
-    # publish:
       
