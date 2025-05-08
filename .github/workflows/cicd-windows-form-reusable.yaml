@@ -33,7 +33,7 @@ jobs:
 
       - name: Baixar SonarScanner for MSBuild
         run: |
-          Invoke-WebRequest -Uri "https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/5.15.0.61497/sonar-scanner-msbuild-5.15.0.61497-net46.zip" -OutFile "scanner.zip"
+          Invoke-WebRequest -Uri "https://binaries.sonarsource.com/Distribution/sonar-scanner-msbuild/sonar-scanner-msbuild-5.12.1.58839-net46.zip" -OutFile "scanner.zip"
           Expand-Archive scanner.zip -DestinationPath "sonarscanner"
 
       - name: Begin SonarCloud analysis
