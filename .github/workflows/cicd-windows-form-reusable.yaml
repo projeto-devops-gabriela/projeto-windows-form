@@ -9,9 +9,6 @@ on:
       app-directory:
         required: true
         type: string
-      artifacts-directory:
-        required: true
-        type: string
     secrets:
       SONAR_TOKEN:
 
@@ -60,7 +57,7 @@ jobs:
         with:
           args: >
             -Dsonar.organization=${{ vars.ORGANIZATION_SONAR }}
-            -Dsonar.projectKey=${{ vars.PROJECT_KEY_SONAR }}
+            -Dsonar.projectKey=${{ github.event.repository.name }}
             -Dsonar.verbose=true
             -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*
 
@@ -69,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: ${{ inputs.artifacts-directory }}
+          path: ${{ inputs.app-directory }}/bin/Release/
   
   publish:
     runs-on: windows-latest

@@ -13,7 +13,6 @@ jobs:
     with:
       test-directory: 'src/UnitTestProject1'
       app-directory: 'src/WindowsFormsApp-ok'
-      artifacts-directory: 'src/WindowsFormsApp-ok/bin/Release/'
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     permissions:
