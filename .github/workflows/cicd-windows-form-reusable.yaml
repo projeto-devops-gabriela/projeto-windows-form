@@ -75,6 +75,8 @@ jobs:
     runs-on: windows-latest
     needs: build-and-test
     steps:
+      - name: debug for artifacts
+        run: dir ${{ inputs.artifacts-directory }}
       # Deploy for github releases
       - name: Deploy to GitHub Releases
         uses: softprops/action-gh-release@v1
