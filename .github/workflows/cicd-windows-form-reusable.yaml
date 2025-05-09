@@ -70,4 +70,18 @@ jobs:
         with:
           name: build-artifacts
           path: ${{ inputs.artifacts-directory }}
-      
+  
+  publish:
+    runs-on: windows-latest
+    needs: build-and-test
+    steps:
+      # Deploy for github releases
+      - name: Deploy to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          files: ${{ inputs.artifacts-directory }}*.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
