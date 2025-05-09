@@ -42,8 +42,11 @@ ${{ inputs.app-directory }}/bin/Release/
 
 - Dúvidas:
 
-Pode github releases? R: Sim, e é uma ótima ideia.
+Pode github releases? R: Sim, e é uma ótima ideia. <br>
+
+Atualizar pra azure? Imagino que sim, porque o computador não deixa baixar o .exe do github
+(por motivos de segurança configurados no pc, imagino) R: 
 
 - A corrigir:
 
-Tag de versão automática
+Tag-name de versão automática
