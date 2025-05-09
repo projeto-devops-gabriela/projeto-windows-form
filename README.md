@@ -2,13 +2,6 @@
 
 ## Build - ok
 
-- A conferir:
-
-actions/checkout <br>
-microsoft/setup-msbuild
-
-Quais as versões mais atualizadas?
-
 - A implementar, caso desejado:
 
 Cache?
@@ -23,8 +16,11 @@ Na esteira, melhor transformar em uma etapa da build? R: Sim.
 
 ## SonarQube - ok
 
-## Salvar os binários para CD -ok?
+## Salvar os binários para CD - ok
 
 # CD
 
 ## Copiar os binários do CI para um file server
+
+pode github releases?
+ou melhor azure blob storage?
