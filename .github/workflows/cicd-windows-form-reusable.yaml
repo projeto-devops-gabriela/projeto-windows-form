@@ -75,14 +75,21 @@ jobs:
     runs-on: windows-latest
     needs: build-and-test
     steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build artifacts
+          path: build
+
       - name: debug for artifacts
-        run: dir ${{ inputs.artifacts-directory }}
+        run: dir build/**/*.exe
+
       # Deploy for github releases
       - name: Deploy to GitHub Releases
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          files: ${{ inputs.artifacts-directory }}*.exe
+          files: build/**/*.exe
           draft: false
           prerelease: false
         env:
