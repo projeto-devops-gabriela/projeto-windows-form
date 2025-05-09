@@ -78,7 +78,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build artifacts
+          name: build-artifacts
           path: build
 
       - name: debug for artifacts
