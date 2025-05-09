@@ -9,6 +9,9 @@ on:
       app-directory:
         required: true
         type: string
+      artifacts-directory:
+        required: true
+        type: string
     secrets:
       SONAR_TOKEN:
 
@@ -66,5 +69,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: ${{ inputs.app-directory }}/bin/Release/
+          path: ${{ inputs.artifacts-directory }}
       
