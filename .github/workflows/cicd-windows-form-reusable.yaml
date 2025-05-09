@@ -80,7 +80,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          files: ${{ inputs.artifacts-directory }}*.zip
+          files: ${{ inputs.artifacts-directory }}*.exe
           draft: false
           prerelease: false
         env:
