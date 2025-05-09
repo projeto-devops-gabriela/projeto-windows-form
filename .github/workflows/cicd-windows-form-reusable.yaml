@@ -82,7 +82,7 @@ jobs:
           path: build
 
       - name: debug for artifacts
-        run: dir build /s
+        run: dir build
 
       # Deploy for github releases
       - name: Deploy to GitHub Releases
