@@ -72,14 +72,12 @@ jobs:
     runs-on: windows-latest
     needs: build-and-test
     steps:
+      # Download the build artifacts
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: build
-
-      - name: debug for artifacts
-        run: dir build
 
       # Deploy for github releases
       - name: Deploy to GitHub Releases
