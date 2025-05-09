@@ -8,11 +8,9 @@ Cache?
 
 ## Tests - ok
 
-- Dúvidas:
-
-A solução de app e a de teste devem estar dentro da mesma pasta e serem referenciadas por src, por exemplo? <br>
-
 Na esteira, melhor transformar em uma etapa da build? R: Sim.
+
+VSTest está deprecated, tem problema? R:
 
 ## SonarQube - ok
 
@@ -22,5 +20,5 @@ Na esteira, melhor transformar em uma etapa da build? R: Sim.
 
 ## Copiar os binários do CI para um file server
 
-pode github releases?
-ou melhor azure blob storage?
+Pode github releases?
+Ou melhor azure blob storage? R:
