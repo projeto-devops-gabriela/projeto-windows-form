@@ -56,8 +56,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.organization=gabriela-m-silva
-            -Dsonar.projectKey=Gabriela-M-Silva_Projeto-Windows-Form
+            -Dsonar.organization=${{ vars.ORGANIZATION_SONAR }}
+            -Dsonar.projectKey=${{ vars.PROJECT_KEY_SONAR }}
             -Dsonar.verbose=true
             -Dsonar.exclusions=**/bin/**/*,**/obj/**/*,**/packages/**/*
 

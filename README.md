@@ -23,7 +23,7 @@ Na esteira, melhor transformar em uma etapa da build? R: Sim.
 
 ## SonarQube - ok
 
-## Salvar os binários para CD
+## Salvar os binários para CD -ok?
 
 # CD
 
