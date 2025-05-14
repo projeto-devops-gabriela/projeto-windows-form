@@ -7,13 +7,13 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   call-windows-form:
-    uses: ./.github/workflows/cicd-windows-form-reusable.yaml
+    uses: gabriela-m-silva/esteiras-devops/.github/workflows/esteira-teste-conexao.yaml@main
     with:
       test-directory: 'src/UnitTestProject1'
-      app-directory: 'src/WindowsFormsApp-ok'
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-    permissions:
-      contents: write
+      proj-directory: 'src/WindowsFormsApp-ok'
+    secrets: inherit
