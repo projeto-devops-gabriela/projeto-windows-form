@@ -16,4 +16,5 @@ jobs:
     with:
       test-directory: 'src/UnitTestProject1'
       proj-directory: 'src/WindowsFormsApp-ok'
+      project-type: 'WindowsFormsApp'
     secrets: inherit
