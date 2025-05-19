@@ -14,5 +14,6 @@ jobs:
   call-windows-form:
     uses: gabriela-m-silva/esteiras-devops/.github/workflows/esteira-teste-conexao.yaml@main
     with:
+      project-directory: 'src/WindowsFormsApp-ok'
       project-type: 'WindowsFormsApp'
     secrets: inherit
